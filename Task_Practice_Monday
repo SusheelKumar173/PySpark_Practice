@@ -26,36 +26,20 @@
       ],
       "metadata": {
         "id": "sdTMMp6od19E",
-        "outputId": "b1b2ea5d-fd8f-4dd2-a5a5-e8f051b61deb",
+        "outputId": "fcdb0ec2-aec4-43a4-a56e-58e5e9cbcc88",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 1,
+      "execution_count": 54,
       "outputs": [
         {
           "output_type": "stream",
           "name": "stdout",
           "text": [
             "Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/\n",
-            "Collecting pyspark\n",
-            "  Downloading pyspark-3.3.2.tar.gz (281.4 MB)\n",
-            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m281.4/281.4 MB\u001b[0m \u001b[31m3.5 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25h  Preparing metadata (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
-            "Collecting py4j==0.10.9.5\n",
-            "  Downloading py4j-0.10.9.5-py2.py3-none-any.whl (199 kB)\n",
-            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m199.7/199.7 KB\u001b[0m \u001b[31m21.4 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25hBuilding wheels for collected packages: pyspark\n",
-            "  Building wheel for pyspark (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
-            "  Created wheel for pyspark: filename=pyspark-3.3.2-py2.py3-none-any.whl size=281824028 sha256=38ad099e1093cb17030acaa3a789840f4d36c914f351a0c0869822b98920137c\n",
-            "  Stored in directory: /root/.cache/pip/wheels/6c/e3/9b/0525ce8a69478916513509d43693511463c6468db0de237c86\n",
-            "Successfully built pyspark\n",
-            "Installing collected packages: py4j, pyspark\n",
-            "  Attempting uninstall: py4j\n",
-            "    Found existing installation: py4j 0.10.9.7\n",
-            "    Uninstalling py4j-0.10.9.7:\n",
-            "      Successfully uninstalled py4j-0.10.9.7\n",
-            "Successfully installed py4j-0.10.9.5 pyspark-3.3.2\n"
+            "Requirement already satisfied: pyspark in /usr/local/lib/python3.9/dist-packages (3.3.2)\n",
+            "Requirement already satisfied: py4j==0.10.9.5 in /usr/local/lib/python3.9/dist-packages (from pyspark) (0.10.9.5)\n"
           ]
         }
       ]
@@ -68,7 +52,16 @@
       "metadata": {
         "id": "4CXelF3Pd1_Y"
       },
-      "execution_count": 2,
+      "execution_count": 55,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "ScRKXH_KtH1C"
+      },
+      "execution_count": 55,
       "outputs": []
     },
     {
@@ -79,7 +72,7 @@
       "metadata": {
         "id": "XRt5rjvUd2Bo"
       },
-      "execution_count": 3,
+      "execution_count": 56,
       "outputs": []
     },
     {
@@ -89,19 +82,19 @@
       ],
       "metadata": {
         "id": "vufTI-4Gd2Dl",
-        "outputId": "dfe220b5-909f-4019-9120-702f2e568aad",
+        "outputId": "033dc5ca-4ac6-463f-e460-e7569980f51b",
         "colab": {
           "base_uri": "https://localhost:8080/",
           "height": 219
         }
       },
-      "execution_count": 4,
+      "execution_count": 57,
       "outputs": [
         {
           "output_type": "execute_result",
           "data": {
             "text/plain": [
-              "<pyspark.sql.session.SparkSession at 0x7f6b42a53f10>"
+              "<pyspark.sql.session.SparkSession at 0x7fd781e13340>"
             ],
             "text/html": [
               "\n",
@@ -111,7 +104,7 @@
               "        <div>\n",
               "            <p><b>SparkContext</b></p>\n",
               "\n",
-              "            <p><a href=\"http://062c696b4064:4040\">Spark UI</a></p>\n",
+              "            <p><a href=\"http://9da169723190:4040\">Spark UI</a></p>\n",
               "\n",
               "            <dl>\n",
               "              <dt>Version</dt>\n",
@@ -128,7 +121,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 4
+          "execution_count": 57
         }
       ]
     },
@@ -141,7 +134,7 @@
       "metadata": {
         "id": "1NxSdFcpeZ09"
       },
-      "execution_count": 7,
+      "execution_count": 58,
       "outputs": []
     },
     {
@@ -151,12 +144,12 @@
       ],
       "metadata": {
         "id": "9Is3DJ4YevSy",
-        "outputId": "eb6d7827-cefa-4294-ea5a-941858389332",
+        "outputId": "49b77a82-49c6-4e2a-96c6-4b43ebfaa10a",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 8,
+      "execution_count": 59,
       "outputs": [
         {
           "output_type": "stream",
@@ -199,12 +192,12 @@
       ],
       "metadata": {
         "id": "b83zNVY0eys5",
-        "outputId": "81115e3a-525e-4672-d499-1c2aeefe3ada",
+        "outputId": "92b8e3f6-c0d9-4420-ba5a-b512e3dc1d6c",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 9,
+      "execution_count": 60,
       "outputs": [
         {
           "output_type": "stream",
@@ -226,12 +219,12 @@
       ],
       "metadata": {
         "id": "s6Qsyal8fLIa",
-        "outputId": "ffe74ace-4ccc-48df-c3b4-cbce652b03b3",
+        "outputId": "b8f43490-56c0-4a71-cad5-7580697d3b3a",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 10,
+      "execution_count": 61,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -241,7 +234,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 10
+          "execution_count": 61
         }
       ]
     },
@@ -252,12 +245,12 @@
       ],
       "metadata": {
         "id": "gPMiXvJGfN2I",
-        "outputId": "6099266a-f7fe-409a-e0df-4c6efb3a21e5",
+        "outputId": "2a7f489d-09e6-49d3-f3c3-dc5d986854a0",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 11,
+      "execution_count": 62,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -267,7 +260,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 11
+          "execution_count": 62
         }
       ]
     },
@@ -278,12 +271,12 @@
       ],
       "metadata": {
         "id": "hjYwZ4PnfR7e",
-        "outputId": "3c04dd0f-1a03-41e6-da91-b08ec4ace4da",
+        "outputId": "8e93d949-dd5d-4fff-be74-7342ce04f868",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 13,
+      "execution_count": 63,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -297,7 +290,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 13
+          "execution_count": 63
         }
       ]
     },
@@ -308,12 +301,12 @@
       ],
       "metadata": {
         "id": "mtwMwAGkfVF7",
-        "outputId": "7b45f993-3ab0-475a-f116-5b5bcbe34242",
+        "outputId": "0bda1bc2-4934-484a-e788-abed527e1178",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 15,
+      "execution_count": 64,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -323,7 +316,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 15
+          "execution_count": 64
         }
       ]
     },
@@ -334,12 +327,12 @@
       ],
       "metadata": {
         "id": "qZGy3DoOfcXG",
-        "outputId": "460ea3e9-a990-4d83-f0c5-deb092d4f908",
+        "outputId": "7156e5bb-47ef-4742-e9d9-be711c1b0d53",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 17,
+      "execution_count": 65,
       "outputs": [
         {
           "output_type": "stream",
@@ -382,12 +375,12 @@
       ],
       "metadata": {
         "id": "RHdKZm0cfnuC",
-        "outputId": "8801122a-7598-4630-9804-8e07a7954adb",
+        "outputId": "34652afe-a322-46b7-b0be-ceada37260bb",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 18,
+      "execution_count": 66,
       "outputs": [
         {
           "output_type": "stream",
@@ -430,12 +423,12 @@
       ],
       "metadata": {
         "id": "J51X_MvYfzi3",
-        "outputId": "bfb5f896-2d00-459c-c026-7658cae6d54d",
+        "outputId": "fcf2b3f3-9969-4eb5-b142-19c649516084",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 19,
+      "execution_count": 67,
       "outputs": [
         {
           "output_type": "stream",
@@ -478,12 +471,12 @@
       ],
       "metadata": {
         "id": "guu5Rq0df3yR",
-        "outputId": "797a86c9-f4a6-4e81-ffe8-d6a699570260",
+        "outputId": "cd108bfd-1ffb-4318-c872-148c858ac66b",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 20,
+      "execution_count": 68,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -493,7 +486,143 @@
             ]
           },
           "metadata": {},
-          "execution_count": 20
+          "execution_count": 68
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql.functions import when,lit"
+      ],
+      "metadata": {
+        "id": "UlEDmhPEtP4A"
+      },
+      "execution_count": 69,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = student_pyspark.filter(student_pyspark['Marks'].isNull())\n",
+        "absentees.show()\n",
+        "print(\"Total Absentees = \" ,absentees.count())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zpcZQ2EWtQFF",
+        "outputId": "1ff9891a-2a4a-4f24-9c86-eeaa6c1c0c0e"
+      },
+      "execution_count": 73,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+------+-----+\n",
+            "|Sid| Sname|Marks|\n",
+            "+---+------+-----+\n",
+            "| 10|Deepak| null|\n",
+            "| 13| Arjun| null|\n",
+            "| 17| Karan| null|\n",
+            "| 18|rakesh| null|\n",
+            "| 61|  manu| null|\n",
+            "| 62| MOHIT| null|\n",
+            "| 79|Nikhil| null|\n",
+            "| 80|Kartik| null|\n",
+            "| 91| pawan| null|\n",
+            "| 92|Rajeev| null|\n",
+            "+---+------+-----+\n",
+            "\n",
+            "Total Absentees =  10\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = student_pyspark.filter(student_pyspark['Marks'].isNull()).withColumn(\"Grade\",when(student_pyspark['Marks'].isNull() , lit(\"Absent\")))"
+      ],
+      "metadata": {
+        "id": "9l3gF6PRtQIx"
+      },
+      "execution_count": 74,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees.fillna(value = 0)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LuucTdS2uLU1",
+        "outputId": "b92239a1-0bc6-41de-e121-f4d685ce9f45"
+      },
+      "execution_count": 85,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "DataFrame[Sid: int, Sname: string, Marks: int, Grade: string]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 85
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = absentees.select(['Sid','Sname','Grade'])"
+      ],
+      "metadata": {
+        "id": "57pLcChouLZf"
+      },
+      "execution_count": 88,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees.show()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jiMCRO9JvjI7",
+        "outputId": "1af62a64-4690-4eeb-e63b-10277ffe2fa3"
+      },
+      "execution_count": 89,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+------+------+\n",
+            "|Sid| Sname| Grade|\n",
+            "+---+------+------+\n",
+            "| 10|Deepak|Absent|\n",
+            "| 13| Arjun|Absent|\n",
+            "| 17| Karan|Absent|\n",
+            "| 18|rakesh|Absent|\n",
+            "| 61|  manu|Absent|\n",
+            "| 62| MOHIT|Absent|\n",
+            "| 79|Nikhil|Absent|\n",
+            "| 80|Kartik|Absent|\n",
+            "| 91| pawan|Absent|\n",
+            "| 92|Rajeev|Absent|\n",
+            "+---+------+------+\n",
+            "\n"
+          ]
         }
       ]
     },
@@ -505,7 +634,7 @@
       "metadata": {
         "id": "GYTh1Ktwf_7H"
       },
-      "execution_count": 21,
+      "execution_count": 90,
       "outputs": []
     },
     {
@@ -515,12 +644,12 @@
       ],
       "metadata": {
         "id": "CQf6o6EcgDmm",
-        "outputId": "c55f17df-fb99-4e02-e50e-3313a5808676",
+        "outputId": "8743b42b-6a45-4c16-91c5-ef77f0ef770d",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 22,
+      "execution_count": 91,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -530,7 +659,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 22
+          "execution_count": 91
         }
       ]
     },
@@ -542,7 +671,7 @@
       "metadata": {
         "id": "P34vhtnkgGJ6"
       },
-      "execution_count": 23,
+      "execution_count": 92,
       "outputs": []
     },
     {
@@ -552,12 +681,12 @@
       ],
       "metadata": {
         "id": "S7hdVWYkgWs8",
-        "outputId": "7cc84b3d-be39-47b3-a23b-6e5f237dbc43",
+        "outputId": "7c03dddc-918c-4c83-821e-81a942fc2eee",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 24,
+      "execution_count": 93,
       "outputs": [
         {
           "output_type": "stream",
@@ -595,12 +724,12 @@
       ],
       "metadata": {
         "id": "X3snGqw-gZKk",
-        "outputId": "dec76e6a-647b-4c00-8552-dc265596ff92",
+        "outputId": "c512326b-7e98-4bb2-bc0e-b1e7268a5ef0",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 25,
+      "execution_count": 94,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -610,7 +739,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 25
+          "execution_count": 94
         }
       ]
     },
@@ -622,7 +751,7 @@
       "metadata": {
         "id": "lOZbHXrTgdQf"
       },
-      "execution_count": 26,
+      "execution_count": 95,
       "outputs": []
     },
     {
@@ -632,12 +761,12 @@
       ],
       "metadata": {
         "id": "1stmmukCgr4f",
-        "outputId": "92f9281b-e621-40f3-ae8c-a95b557dd94a",
+        "outputId": "882339b2-6eda-4925-934e-5de7d721fc0e",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 27,
+      "execution_count": 96,
       "outputs": [
         {
           "output_type": "stream",
@@ -680,12 +809,12 @@
       ],
       "metadata": {
         "id": "q3tn9BL6hUfT",
-        "outputId": "c61f5bd7-2a67-4441-9ae9-f26d9ca2b3dd",
+        "outputId": "7fd2ab2a-573a-4274-dbc3-4d6a019188ad",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 28,
+      "execution_count": 97,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -695,7 +824,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 28
+          "execution_count": 97
         }
       ]
     },
@@ -707,7 +836,7 @@
       "metadata": {
         "id": "eKrPRHz0hXbY"
       },
-      "execution_count": 29,
+      "execution_count": 98,
       "outputs": []
     },
     {
@@ -717,12 +846,12 @@
       ],
       "metadata": {
         "id": "Pa5pLb9Ihhzn",
-        "outputId": "ca1c44b4-ef6b-4f6b-e684-65dcc782d409",
+        "outputId": "87150460-2452-451e-f8d9-a14cce2cfba3",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 30,
+      "execution_count": 99,
       "outputs": [
         {
           "output_type": "stream",
@@ -750,12 +879,12 @@
       ],
       "metadata": {
         "id": "KNZI6cZuhjNd",
-        "outputId": "15aa36b8-4f60-4255-9e2f-6c9d2d220cdf",
+        "outputId": "3d80e756-f9e7-43d1-b729-33b83e9f973d",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 31,
+      "execution_count": 100,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -765,7 +894,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 31
+          "execution_count": 100
         }
       ]
     },
@@ -777,7 +906,7 @@
       "metadata": {
         "id": "9HSquUQUjqsA"
       },
-      "execution_count": 32,
+      "execution_count": 101,
       "outputs": []
     },
     {
@@ -788,7 +917,7 @@
       "metadata": {
         "id": "F9wEKF2BiE1F"
       },
-      "execution_count": 58,
+      "execution_count": 102,
       "outputs": []
     },
     {
@@ -798,12 +927,12 @@
       ],
       "metadata": {
         "id": "ZSBNRp_-juuW",
-        "outputId": "044e1946-2f00-4301-bd57-6ec920f25d89",
+        "outputId": "aa47c8e6-ab08-4921-98e0-ad633556bf06",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 59,
+      "execution_count": 103,
       "outputs": [
         {
           "output_type": "stream",
@@ -846,12 +975,12 @@
       ],
       "metadata": {
         "id": "dH-Ol5yZl3q2",
-        "outputId": "86a5d911-b753-4c00-f6ca-e83a778464ef",
+        "outputId": "23a416c7-9732-48ef-f2b3-9821598b8c60",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 60,
+      "execution_count": 104,
       "outputs": [
         {
           "output_type": "stream",
@@ -894,12 +1023,12 @@
       ],
       "metadata": {
         "id": "Os7IayL_mTcC",
-        "outputId": "074ef31e-2292-4071-b39d-904d5172ac90",
+        "outputId": "010888c4-1f5b-4984-8156-03a8e13810c0",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 61,
+      "execution_count": 105,
       "outputs": [
         {
           "output_type": "stream",
@@ -929,12 +1058,12 @@
     {
       "cell_type": "code",
       "source": [
-        "dist_pyspark = student_pyspark.filter(student_pyspark['Marks'] > 90).withColumn('Grade',when((student_pyspark['Marks'] > 90),lit(\"A\"_)))"
+        "dist_pyspark = student_pyspark.filter(student_pyspark['Marks'] > 90).withColumn('Grade',when((student_pyspark['Marks'] > 90),lit(\"A\")))"
       ],
       "metadata": {
         "id": "KndXgVn6mnmT"
       },
-      "execution_count": 63,
+      "execution_count": 115,
       "outputs": []
     },
     {
@@ -944,12 +1073,12 @@
       ],
       "metadata": {
         "id": "hS9PWLjsm7PI",
-        "outputId": "a285500f-4536-45ec-9c46-0dc2186f1cfd",
+        "outputId": "6db6e671-18a3-41a5-d605-18be01b29944",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 64,
+      "execution_count": 116,
       "outputs": [
         {
           "output_type": "stream",
@@ -987,12 +1116,12 @@
       ],
       "metadata": {
         "id": "-wF2EUdhnQC_",
-        "outputId": "bacaa9ba-2279-4f88-ca69-eab7ab924582",
+        "outputId": "b99b4e53-070b-46c6-c8f6-4549021628e1",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 65,
+      "execution_count": 117,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -1002,7 +1131,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 65
+          "execution_count": 117
         }
       ]
     },
@@ -1014,7 +1143,7 @@
       "metadata": {
         "id": "bvoS0WwAnUV7"
       },
-      "execution_count": 68,
+      "execution_count": 118,
       "outputs": []
     },
     {
@@ -1024,12 +1153,12 @@
       ],
       "metadata": {
         "id": "YzdXfAksnkPl",
-        "outputId": "a66ebd7b-5006-4b60-8a1f-254f46f9293c",
+        "outputId": "8bcfa445-a3cc-4323-cb44-7bb6e3a4da74",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 69,
+      "execution_count": 119,
       "outputs": [
         {
           "output_type": "stream",
@@ -1072,12 +1201,12 @@
       ],
       "metadata": {
         "id": "GjTX1Bpon3zg",
-        "outputId": "767357d5-0247-445f-911b-45ebf6a47195",
+        "outputId": "081bcafd-3984-4e3c-d2a0-237bc9e4294f",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 70,
+      "execution_count": 120,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -1087,7 +1216,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 70
+          "execution_count": 120
         }
       ]
     },
@@ -1099,7 +1228,7 @@
       "metadata": {
         "id": "6iuBSL7Yn72C"
       },
-      "execution_count": 72,
+      "execution_count": 121,
       "outputs": []
     },
     {
@@ -1109,12 +1238,12 @@
       ],
       "metadata": {
         "id": "IDyNNWZBoMka",
-        "outputId": "5962e6b1-f81b-4daf-9c46-b69a064b7ad1",
+        "outputId": "6dfb8559-b380-4257-ab01-4a7eb7915761",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 73,
+      "execution_count": 122,
       "outputs": [
         {
           "output_type": "stream",
@@ -1142,12 +1271,12 @@
       ],
       "metadata": {
         "id": "e0U2H22NoX0p",
-        "outputId": "68cda0ca-0efe-4dee-92a8-9fe8c39e9c9b",
+        "outputId": "1bf03f86-4828-4adc-afe7-4ca955cc3a2d",
         "colab": {
           "base_uri": "https://localhost:8080/"
         }
       },
-      "execution_count": 74,
+      "execution_count": 123,
       "outputs": [
         {
           "output_type": "execute_result",
@@ -1157,7 +1286,7 @@
             ]
           },
           "metadata": {},
-          "execution_count": 74
+          "execution_count": 123
         }
       ]
     },
@@ -1167,7 +1296,7 @@
       "metadata": {
         "id": "Y4rt78Awobv8"
       },
-      "execution_count": null,
+      "execution_count": 114,
       "outputs": []
     },
     {
