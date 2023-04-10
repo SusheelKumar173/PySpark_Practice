@@ -1,0 +1,617 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/SusheelKumar173/PySpark_Practice/blob/main/MyTask_Completed\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install pyspark"
+      ],
+      "metadata": {
+        "id": "jPeFwD8Q0SjL",
+        "outputId": "8db44bc0-c1bf-4875-de33-de1d37b38679",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 79,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/\n",
+            "Requirement already satisfied: pyspark in /usr/local/lib/python3.9/dist-packages (3.3.2)\n",
+            "Requirement already satisfied: py4j==0.10.9.5 in /usr/local/lib/python3.9/dist-packages (from pyspark) (0.10.9.5)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql import SparkSession\n",
+        "from pyspark.sql.functions import when,lit"
+      ],
+      "metadata": {
+        "id": "dj1ddYJ70Uss"
+      },
+      "execution_count": 80,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "my_spark = SparkSession.builder.appName('Student_Results').getOrCreate()"
+      ],
+      "metadata": {
+        "id": "MNfI7AWK0fHG"
+      },
+      "execution_count": 81,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "my_spark"
+      ],
+      "metadata": {
+        "id": "dBg8Ybzx0vi_",
+        "outputId": "c25f060b-a62a-45c5-a6ae-629e77e8c59f",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 219
+        }
+      },
+      "execution_count": 82,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<pyspark.sql.session.SparkSession at 0x7f6b42a53f10>"
+            ],
+            "text/html": [
+              "\n",
+              "            <div>\n",
+              "                <p><b>SparkSession - in-memory</b></p>\n",
+              "                \n",
+              "        <div>\n",
+              "            <p><b>SparkContext</b></p>\n",
+              "\n",
+              "            <p><a href=\"http://062c696b4064:4040\">Spark UI</a></p>\n",
+              "\n",
+              "            <dl>\n",
+              "              <dt>Version</dt>\n",
+              "                <dd><code>v3.3.2</code></dd>\n",
+              "              <dt>Master</dt>\n",
+              "                <dd><code>local[*]</code></dd>\n",
+              "              <dt>AppName</dt>\n",
+              "                <dd><code>Student_Results</code></dd>\n",
+              "            </dl>\n",
+              "        </div>\n",
+              "        \n",
+              "            </div>\n",
+              "        "
+            ]
+          },
+          "metadata": {},
+          "execution_count": 82
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark = my_spark.read.csv('Student_Data.csv',header=True,inferSchema=True)"
+      ],
+      "metadata": {
+        "id": "yptDVNYk0wd7"
+      },
+      "execution_count": 83,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark.show()"
+      ],
+      "metadata": {
+        "id": "fQ0E37ul1B05",
+        "outputId": "e29d2ca4-ae37-473b-89bb-9be05b7909f4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 84,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+--------+-----+\n",
+            "|Sid|   Sname|Marks|\n",
+            "+---+--------+-----+\n",
+            "|  1|   rahul|   88|\n",
+            "|  2|Abhishek|   75|\n",
+            "|  3|  Aditya|   32|\n",
+            "|  4|    Amit|   25|\n",
+            "|  5|  mahesh|   88|\n",
+            "|  6|   ROHIT|   90|\n",
+            "|  7|    yash|   76|\n",
+            "|  8|   Ankit|   86|\n",
+            "|  9|   shyam|   45|\n",
+            "| 10|  Deepak| null|\n",
+            "| 11|   Aryan|   76|\n",
+            "| 12|     Raj|   55|\n",
+            "| 13|   Arjun| null|\n",
+            "| 14|   Manoj|   45|\n",
+            "| 15|   ankur|   78|\n",
+            "| 16|   akash|   50|\n",
+            "| 17|   Karan| null|\n",
+            "| 18|  rakesh| null|\n",
+            "| 19|     Sam|   45|\n",
+            "| 20|  Naveen|   34|\n",
+            "+---+--------+-----+\n",
+            "only showing top 20 rows\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark.printSchema()"
+      ],
+      "metadata": {
+        "id": "BnVVV0HY1Ezb",
+        "outputId": "84696884-7630-406d-eb5c-23ceb67204c5",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 85,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "root\n",
+            " |-- Sid: integer (nullable = true)\n",
+            " |-- Sname: string (nullable = true)\n",
+            " |-- Marks: integer (nullable = true)\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark.count()"
+      ],
+      "metadata": {
+        "id": "gTeP14Wg1wwk",
+        "outputId": "0b554d5a-0ead-4377-de7f-fc3bf4070147",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 91,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "100"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 91
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = student_pyspark.filter(student_pyspark['Marks'].isNull())\n",
+        "absentees.show()\n",
+        "print(\"Total Absentees are\",absentees.count())"
+      ],
+      "metadata": {
+        "id": "ULNJJHUs1Ktr",
+        "outputId": "8f17e3f2-e40d-4a5f-961d-62dbaf45560f",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 92,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+------+-----+\n",
+            "|Sid| Sname|Marks|\n",
+            "+---+------+-----+\n",
+            "| 10|Deepak| null|\n",
+            "| 13| Arjun| null|\n",
+            "| 17| Karan| null|\n",
+            "| 18|rakesh| null|\n",
+            "| 61|  manu| null|\n",
+            "| 62| MOHIT| null|\n",
+            "| 79|Nikhil| null|\n",
+            "| 80|Kartik| null|\n",
+            "| 91| pawan| null|\n",
+            "| 92|Rajeev| null|\n",
+            "+---+------+-----+\n",
+            "\n",
+            "Total Absentees are 10\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = absentees.withColumn(\"Grade\",lit(\"Absent\"))"
+      ],
+      "metadata": {
+        "id": "teGPG4eg1WLN"
+      },
+      "execution_count": 93,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees = absentees.select(['Sid','Sname','Grade'])"
+      ],
+      "metadata": {
+        "id": "24oT5pAQ2DDJ"
+      },
+      "execution_count": 95,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "absentees.show()"
+      ],
+      "metadata": {
+        "id": "5pCBEagD2Frn",
+        "outputId": "b5211f91-11c8-4abd-bfc2-dcc8e37edd83",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 96,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+------+------+\n",
+            "|Sid| Sname| Grade|\n",
+            "+---+------+------+\n",
+            "| 10|Deepak|Absent|\n",
+            "| 13| Arjun|Absent|\n",
+            "| 17| Karan|Absent|\n",
+            "| 18|rakesh|Absent|\n",
+            "| 61|  manu|Absent|\n",
+            "| 62| MOHIT|Absent|\n",
+            "| 79|Nikhil|Absent|\n",
+            "| 80|Kartik|Absent|\n",
+            "| 91| pawan|Absent|\n",
+            "| 92|Rajeev|Absent|\n",
+            "+---+------+------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark = student_pyspark.na.drop()"
+      ],
+      "metadata": {
+        "id": "b_FVSiEN2Q4e"
+      },
+      "execution_count": 97,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "student_pyspark.count()"
+      ],
+      "metadata": {
+        "id": "FzDnleSP2b-O",
+        "outputId": "6c4932d4-38d8-4aef-fd32-d5966154e019",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 98,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "90"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 98
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "dist_pyspark = student_pyspark.filter(student_pyspark['Marks']>90).withColumn('Grade',lit(\"A\"))"
+      ],
+      "metadata": {
+        "id": "1aI-MQ2J2eaI"
+      },
+      "execution_count": 100,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "dist_pyspark.show()"
+      ],
+      "metadata": {
+        "id": "Lj2uXzzG2p35",
+        "outputId": "87ad6d28-624a-4adb-decf-e3480b830034",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 101,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+-------+-----+-----+\n",
+            "|Sid|  Sname|Marks|Grade|\n",
+            "+---+-------+-----+-----+\n",
+            "| 23|  Parth|   98|    A|\n",
+            "| 24| Mayank|   97|    A|\n",
+            "| 25|  vivek|   99|    A|\n",
+            "| 33|  ajith|   98|    A|\n",
+            "| 36| Raghav|   99|    A|\n",
+            "| 37|Rishabh|   97|    A|\n",
+            "| 38|Vaibhav|   95|    A|\n",
+            "| 64|   Ajay|   94|    A|\n",
+            "| 71|Anubhav|   97|    A|\n",
+            "| 74|Shekhar|   99|    A|\n",
+            "| 77|  Paaus|   99|    A|\n",
+            "| 87|Ramanan|   97|    A|\n",
+            "| 88| Aniket|   96|    A|\n",
+            "| 89|  Jatin|   95|    A|\n",
+            "| 90| dinesh|   91|    A|\n",
+            "| 94|  mayur|   98|    A|\n",
+            "+---+-------+-----+-----+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "dist_pyspark.count()"
+      ],
+      "metadata": {
+        "id": "hBB7-Gs-2xx4",
+        "outputId": "3c30839b-3c59-4f6c-efdd-377feca92125",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 102,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "16"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 102
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pass_pyspark = student_pyspark.filter((student_pyspark['Marks']>40) & (student_pyspark['Marks']<90)).withColumn('Grade',lit(\"P\"))"
+      ],
+      "metadata": {
+        "id": "NopcipFM21tY"
+      },
+      "execution_count": 103,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pass_pyspark.show()"
+      ],
+      "metadata": {
+        "id": "1oYgbJw43N1f",
+        "outputId": "4640dcf7-91ea-4de1-cbc8-8ab0a268e16f",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 104,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+--------+-----+-----+\n",
+            "|Sid|   Sname|Marks|Grade|\n",
+            "+---+--------+-----+-----+\n",
+            "|  1|   rahul|   88|    P|\n",
+            "|  2|Abhishek|   75|    P|\n",
+            "|  5|  mahesh|   88|    P|\n",
+            "|  7|    yash|   76|    P|\n",
+            "|  8|   Ankit|   86|    P|\n",
+            "|  9|   shyam|   45|    P|\n",
+            "| 11|   Aryan|   76|    P|\n",
+            "| 12|     Raj|   55|    P|\n",
+            "| 14|   Manoj|   45|    P|\n",
+            "| 15|   ankur|   78|    P|\n",
+            "| 16|   akash|   50|    P|\n",
+            "| 19|     Sam|   45|    P|\n",
+            "| 21|  Ashish|   78|    P|\n",
+            "| 26| Aaditya|   87|    P|\n",
+            "| 27|  Neeraj|   83|    P|\n",
+            "| 28|   kumar|   65|    P|\n",
+            "| 29| Abhinav|   76|    P|\n",
+            "| 30|   Soham|   75|    P|\n",
+            "| 31|  Pranav|   78|    P|\n",
+            "| 34|    ABHI|   87|    P|\n",
+            "+---+--------+-----+-----+\n",
+            "only showing top 20 rows\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pass_pyspark.count()"
+      ],
+      "metadata": {
+        "id": "6cLDqsty3RCf",
+        "outputId": "66cf8aa5-82c1-4245-e726-930970d9d79c",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 105,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "62"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 105
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "fail_pyspark = student_pyspark.filter(student_pyspark['Marks']<40).withColumn('Grade',lit(\"F\"))"
+      ],
+      "metadata": {
+        "id": "5kFCYnQm3SvT"
+      },
+      "execution_count": 106,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "fail_pyspark.show()"
+      ],
+      "metadata": {
+        "id": "8N1R-H-y3T-A",
+        "outputId": "83c601d1-8ecd-4c6e-c47e-effd1f49eedd",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 107,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+------+-----+-----+\n",
+            "|Sid| Sname|Marks|Grade|\n",
+            "+---+------+-----+-----+\n",
+            "|  3|Aditya|   32|    F|\n",
+            "|  4|  Amit|   25|    F|\n",
+            "| 20|Naveen|   34|    F|\n",
+            "| 46|shivam|   32|    F|\n",
+            "| 58| SUNNY|   34|    F|\n",
+            "| 78| shaan|    9|    F|\n",
+            "+---+------+-----+-----+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "fail_pyspark.count()"
+      ],
+      "metadata": {
+        "id": "J1ryWhY53gbu",
+        "outputId": "2a6a5e26-7524-4419-91ef-2818619db713",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 108,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "6"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 108
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "u0pe8wZx3jCW"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "Welcome To Colaboratory",
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
