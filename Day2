@@ -1,0 +1,963 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/SusheelKumar173/PySpark_Practice/blob/main/Day2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install pyspark"
+      ],
+      "metadata": {
+        "id": "1FdYzuimF6eP",
+        "outputId": "2345737d-306d-4c48-acd5-c2e513f227b2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 26,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/\n",
+            "Requirement already satisfied: pyspark in /usr/local/lib/python3.9/dist-packages (3.4.0)\n",
+            "Requirement already satisfied: py4j==0.10.9.7 in /usr/local/lib/python3.9/dist-packages (from pyspark) (0.10.9.7)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql import SparkSession\n",
+        "from pyspark.sql.types import StructType,StructField,IntegerType,StringType,DateType\n",
+        "from pyspark.sql.functions import when,lit,col,concat\n",
+        "import pyspark.sql.functions as func"
+      ],
+      "metadata": {
+        "id": "vYModmXGF-0l"
+      },
+      "execution_count": 110,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "my_spark = SparkSession.builder.appName('Practice').getOrCreate()"
+      ],
+      "metadata": {
+        "id": "PGX8qh0RGCCK"
+      },
+      "execution_count": 31,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "my_spark"
+      ],
+      "metadata": {
+        "id": "5JMVIazpGOro",
+        "outputId": "11885a07-c60b-4bd5-d8da-d7f0dea321ec",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 219
+        }
+      },
+      "execution_count": 32,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<pyspark.sql.session.SparkSession at 0x7f1073e429a0>"
+            ],
+            "text/html": [
+              "\n",
+              "            <div>\n",
+              "                <p><b>SparkSession - in-memory</b></p>\n",
+              "                \n",
+              "        <div>\n",
+              "            <p><b>SparkContext</b></p>\n",
+              "\n",
+              "            <p><a href=\"http://d9019031c435:4040\">Spark UI</a></p>\n",
+              "\n",
+              "            <dl>\n",
+              "              <dt>Version</dt>\n",
+              "                <dd><code>v3.4.0</code></dd>\n",
+              "              <dt>Master</dt>\n",
+              "                <dd><code>local[*]</code></dd>\n",
+              "              <dt>AppName</dt>\n",
+              "                <dd><code>Practise</code></dd>\n",
+              "            </dl>\n",
+              "        </div>\n",
+              "        \n",
+              "            </div>\n",
+              "        "
+            ]
+          },
+          "metadata": {},
+          "execution_count": 32
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = my_spark.read.csv('Student.csv',header=True,inferSchema=True)"
+      ],
+      "metadata": {
+        "id": "pgdLNYh2GVDO"
+      },
+      "execution_count": 122,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "hEyMzWRiGd5S",
+        "outputId": "1cae3af0-bcdb-4684-f4a6-a802969493d9",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 123,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|19/05/2022|  1|     cloud|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|19/05/2022|  2|      biba|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|23/04/2022|  2|      biba|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|19/05/2022|  1|     cloud|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|23/04/2022|  1|     cloud|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|23/04/2022|  1|     cloud|\n",
+            "|  7|        K|     Aman|   87|     88|       81|23/04/2022|  3|       atm|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|23/04/2022|  4|        ES|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|11/11/2022|  4|        ES|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|11/11/2022|  4|        ES|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|11/11/2022|  4|        ES|\n",
+            "| 12|        S|      Ram|   70|     80|       85|11/11/2022|  4|        ES|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|11/11/2022|  4|        ES|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|11/11/2022|  4|        ES|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|11/11/2022|  4|        ES|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = my_spark.read.format(\"csv\").option(\"header\",True).option(\"inferSchema\",True).load(\"Student.csv\")"
+      ],
+      "metadata": {
+        "id": "0DF40-ckGgps"
+      },
+      "execution_count": 124,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "ZDe4f-nIJE4G",
+        "outputId": "13a27db6-f829-41b8-f232-7fa30448ab7a",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 125,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|19/05/2022|  1|     cloud|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|19/05/2022|  2|      biba|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|23/04/2022|  2|      biba|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|19/05/2022|  1|     cloud|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|23/04/2022|  1|     cloud|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|23/04/2022|  1|     cloud|\n",
+            "|  7|        K|     Aman|   87|     88|       81|23/04/2022|  3|       atm|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|23/04/2022|  4|        ES|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|11/11/2022|  4|        ES|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|11/11/2022|  4|        ES|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|11/11/2022|  4|        ES|\n",
+            "| 12|        S|      Ram|   70|     80|       85|11/11/2022|  4|        ES|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|11/11/2022|  4|        ES|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|11/11/2022|  4|        ES|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|11/11/2022|  4|        ES|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.printSchema()"
+      ],
+      "metadata": {
+        "id": "xMhuVs4YJJK7",
+        "outputId": "7c08c6f5-efa1-49b7-b99a-be6445fcd27c",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 126,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "root\n",
+            " |-- sid: integer (nullable = true)\n",
+            " |-- firstname: string (nullable = true)\n",
+            " |-- lastname: string (nullable = true)\n",
+            " |-- maths: integer (nullable = true)\n",
+            " |-- physics: integer (nullable = true)\n",
+            " |-- chemistry: integer (nullable = true)\n",
+            " |-- doj: string (nullable = true)\n",
+            " |-- tid: integer (nullable = true)\n",
+            " |-- competency: string (nullable = true)\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "mfdA67KILewg"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "my_schema = StructType([\n",
+        "    StructField(\"sid\",IntegerType(),nullable=False),\n",
+        "    StructField(\"firstname\",StringType(),True),\n",
+        "    StructField(\"lastname\",StringType(),True),\n",
+        "    StructField(\"maths\",IntegerType(),True),\n",
+        "    StructField(\"physics\",IntegerType(),True),\n",
+        "    StructField(\"chemistry\",IntegerType(),True),\n",
+        "    StructField(\"doj\",DateType(),True),\n",
+        "    StructField(\"tid\",IntegerType(),True),\n",
+        "    StructField(\"competency\",StringType(),True)\n",
+        "])"
+      ],
+      "metadata": {
+        "id": "1Dt01SvYJL63"
+      },
+      "execution_count": 127,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = my_spark.read.format(\"csv\").option(\"header\",True).schema(my_schema).option(\"dateFormat\",\"d/M/y\").load(\"Student.csv\")\n",
+        "# stud_df = my_spark.read.csv(\"Student.csv\",header=True,schema=my_schema,dateFormat=\"d/M/y\")\n"
+      ],
+      "metadata": {
+        "id": "8NG_K1MXKOTR"
+      },
+      "execution_count": 128,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.printSchema()"
+      ],
+      "metadata": {
+        "id": "oQ_zgSN2KW2W",
+        "outputId": "751f90d8-5eb1-4ebe-9045-332da610cb5a",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 129,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "root\n",
+            " |-- sid: integer (nullable = true)\n",
+            " |-- firstname: string (nullable = true)\n",
+            " |-- lastname: string (nullable = true)\n",
+            " |-- maths: integer (nullable = true)\n",
+            " |-- physics: integer (nullable = true)\n",
+            " |-- chemistry: integer (nullable = true)\n",
+            " |-- doj: date (nullable = true)\n",
+            " |-- tid: integer (nullable = true)\n",
+            " |-- competency: string (nullable = true)\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "2zTXdNt3KZZM",
+        "outputId": "9010f97c-58d7-4197-8c29-8810fd23f3ec",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 130,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = stud_df.withColumn(\"School\",lit(\"ABC\"))"
+      ],
+      "metadata": {
+        "id": "jFEOf5sfMga4"
+      },
+      "execution_count": 131,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "ILBHUtDtMy2I",
+        "outputId": "bcbb5366-3031-4f14-e194-d54d2bac9c20",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 132,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|School|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = stud_df.withColumn(\"Total Marks\",(stud_df.maths + stud_df.physics + stud_df.chemistry))"
+      ],
+      "metadata": {
+        "id": "Hi2eAOyXKpdE"
+      },
+      "execution_count": 133,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "UUozS70cMW8X",
+        "outputId": "20e358dc-4f8f-4b91-e899-f0b085f9255d",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 134,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|School|Total Marks|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|        293|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|        263|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|        253|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|        275|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|        275|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|        244|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|        256|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|        235|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|        244|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|        134|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|        269|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|        235|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|        235|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|        235|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|        223|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = stud_df.withColumn(\"Percentage\",(((stud_df['Total Marks'])/300)*100))"
+      ],
+      "metadata": {
+        "id": "UWnBsH3uMaj3"
+      },
+      "execution_count": 135,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "Q0H4jIMrNNTd",
+        "outputId": "f7f5543c-a091-4172-9062-335413bdc031",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 136,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+------------------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|School|Total Marks|        Percentage|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+------------------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|        293| 97.66666666666667|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|        263| 87.66666666666667|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|        253| 84.33333333333334|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|        275| 91.66666666666666|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|        275| 91.66666666666666|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|        244| 81.33333333333333|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|        256| 85.33333333333334|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|        235| 78.33333333333333|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|        244| 81.33333333333333|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|        134|44.666666666666664|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|        269| 89.66666666666666|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|        235| 78.33333333333333|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|        235| 78.33333333333333|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|        235| 78.33333333333333|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|        223| 74.33333333333333|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+------------------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "stud_df = stud_df.withColumn(\"Percentage\",func.round(stud_df['Percentage'],2))"
+      ],
+      "metadata": {
+        "id": "PakfRnH8NSZE"
+      },
+      "execution_count": 137,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "gvn3IgYGOCRY",
+        "outputId": "48338189-2c2d-4d4b-aa1b-d43ad1f30f46",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 138,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|School|Total Marks|Percentage|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|        293|     97.67|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|        263|     87.67|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|        253|     84.33|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|        275|     91.67|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|        275|     91.67|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|        244|     81.33|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|        256|     85.33|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|        235|     78.33|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|        244|     81.33|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|        134|     44.67|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|        269|     89.67|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|        223|     74.33|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.rdd.getNumPartitions()"
+      ],
+      "metadata": {
+        "id": "6J1XIeoXODx4",
+        "outputId": "4ac0d4c8-a1ce-4ed8-f1ac-6721fc838d5b",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 139,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "1"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 139
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.groupBy('doj').count().show()"
+      ],
+      "metadata": {
+        "id": "E3fSt9ChQWYZ",
+        "outputId": "f43c187c-da5f-4615-d34b-b50578798ae5",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 140,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+----------+-----+\n",
+            "|       doj|count|\n",
+            "+----------+-----+\n",
+            "|2022-05-19|    3|\n",
+            "|2022-11-11|    7|\n",
+            "|2022-04-23|    5|\n",
+            "+----------+-----+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.groupBy('competency').max('Total Marks').show()"
+      ],
+      "metadata": {
+        "id": "0QhvZ6PKQg5W",
+        "outputId": "890f2005-6a3f-4d2d-ffb0-c62bffa0f899",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 141,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+----------+----------------+\n",
+            "|competency|max(Total Marks)|\n",
+            "+----------+----------------+\n",
+            "|       atm|             256|\n",
+            "|        ES|             269|\n",
+            "|     cloud|             293|\n",
+            "|      biba|             263|\n",
+            "+----------+----------------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.groupBy('competency').max('Percentage').show()"
+      ],
+      "metadata": {
+        "id": "SvUp1zYdQn3N",
+        "outputId": "ecba670a-ad9b-48a5-ba4b-bf492781d2ad",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 142,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+----------+---------------+\n",
+            "|competency|max(Percentage)|\n",
+            "+----------+---------------+\n",
+            "|       atm|          85.33|\n",
+            "|        ES|          89.67|\n",
+            "|     cloud|          97.67|\n",
+            "|      biba|          87.67|\n",
+            "+----------+---------------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = stud_df.withColumn(\"name\",concat(\"firstname\",concat(lit(\" \"),\"lastname\")))"
+      ],
+      "metadata": {
+        "id": "qvHDPwY_XrHN"
+      },
+      "execution_count": 143,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "nE88si3OX-sJ",
+        "outputId": "8e1f99df-f6dc-4990-9792-118c06e78154",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 144,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+--------------+\n",
+            "|sid|firstname| lastname|maths|physics|chemistry|       doj|tid|competency|School|Total Marks|Percentage|          name|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+--------------+\n",
+            "|  1|        G|  Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|        293|     97.67|     G Susheel|\n",
+            "|  2|        G|  Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|        263|     87.67|     G Sravani|\n",
+            "|  3|        N|   Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|        253|     84.33|      N Alekya|\n",
+            "|  4|        A|  Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|        275|     91.67|     A Sravani|\n",
+            "|  5|        C|  Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|        275|     91.67|     C Bhavesh|\n",
+            "|  6|        G|  Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|        244|     81.33|     G Kalpana|\n",
+            "|  7|        K|     Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|        256|     85.33|        K Aman|\n",
+            "|  8|     Neel|Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|        235|     78.33|Neel Prashanth|\n",
+            "|  9|        S|Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|        244|     81.33|   S Rajamouli|\n",
+            "| 10|       N |   Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|        134|     44.67|     N  Ashwin|\n",
+            "| 11|       Om|     Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|        269|     89.67|       Om Raut|\n",
+            "| 12|        S|      Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|         S Ram|\n",
+            "| 13|        R|    Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|        235|     78.33|       R Ramya|\n",
+            "| 14|        V| Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|    V Nagaraja|\n",
+            "| 15|        M|  Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|        223|     74.33|     M Deepika|\n",
+            "+---+---------+---------+-----+-------+---------+----------+---+----------+------+-----------+----------+--------------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df = stud_df.select(['sid','name','maths','physics','chemistry','doj','tid','competency','school','Total Marks','Percentage'])"
+      ],
+      "metadata": {
+        "id": "N-wM-SnqYIhI"
+      },
+      "execution_count": 145,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "stud_df.show()"
+      ],
+      "metadata": {
+        "id": "A2kdRiQ8YelU",
+        "outputId": "086d07a5-a926-4017-8ff4-4228daff12eb",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 146,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+---+--------------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "|sid|          name|maths|physics|chemistry|       doj|tid|competency|school|Total Marks|Percentage|\n",
+            "+---+--------------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "|  1|     G Susheel|   98|     97|       98|2022-05-19|  1|     cloud|   ABC|        293|     97.67|\n",
+            "|  2|     G Sravani|   95|     80|       88|2022-05-19|  2|      biba|   ABC|        263|     87.67|\n",
+            "|  3|      N Alekya|   88|     80|       85|2022-04-23|  2|      biba|   ABC|        253|     84.33|\n",
+            "|  4|     A Sravani|   97|     80|       98|2022-05-19|  1|     cloud|   ABC|        275|     91.67|\n",
+            "|  5|     C Bhavesh|   98|     80|       97|2022-04-23|  1|     cloud|   ABC|        275|     91.67|\n",
+            "|  6|     G Kalpana|   80|     83|       81|2022-04-23|  1|     cloud|   ABC|        244|     81.33|\n",
+            "|  7|        K Aman|   87|     88|       81|2022-04-23|  3|       atm|   ABC|        256|     85.33|\n",
+            "|  8|Neel Prashanth|   80|     78|       77|2022-04-23|  4|        ES|   ABC|        235|     78.33|\n",
+            "|  9|   S Rajamouli|   89|     78|       77|2022-11-11|  4|        ES|   ABC|        244|     81.33|\n",
+            "| 10|     N  Ashwin|   70|     32|       32|2022-11-11|  4|        ES|   ABC|        134|     44.67|\n",
+            "| 11|       Om Raut|   91|     89|       89|2022-11-11|  4|        ES|   ABC|        269|     89.67|\n",
+            "| 12|         S Ram|   70|     80|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 13|       R Ramya|   85|     70|       80|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 14|    V Nagaraja|   80|     70|       85|2022-11-11|  4|        ES|   ABC|        235|     78.33|\n",
+            "| 15|     M Deepika|   70|     75|       78|2022-11-11|  4|        ES|   ABC|        223|     74.33|\n",
+            "+---+--------------+-----+-------+---------+----------+---+----------+------+-----------+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "iPaXW2hyYgFK"
+      },
+      "execution_count": 146,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyspark.sql.window import Window\n",
+        "from pyspark.sql.functions import row_number,rank,dense_rank"
+      ],
+      "metadata": {
+        "id": "zVfoXlvhQ8tk"
+      },
+      "execution_count": 147,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "rShuCd3EYd2_"
+      },
+      "execution_count": 147,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "window = Window.partitionBy('competency').orderBy(stud_df['Total Marks'].desc())"
+      ],
+      "metadata": {
+        "id": "MjQ_i_iEVf_W"
+      },
+      "execution_count": 159,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ex_row_number = stud_df.withColumn(\"Row Number\",row_number().over(window)).select(['name','Competency','Total Marks','Row Number'])"
+      ],
+      "metadata": {
+        "id": "B9RQypEVVuZP"
+      },
+      "execution_count": 160,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ex_row_number.show()"
+      ],
+      "metadata": {
+        "id": "iIShO4toV-qb",
+        "outputId": "0215267c-a6a7-48fe-bf46-78b404b33b81",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 161,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+--------------+----------+-----------+----------+\n",
+            "|          name|Competency|Total Marks|Row Number|\n",
+            "+--------------+----------+-----------+----------+\n",
+            "|       Om Raut|        ES|        269|         1|\n",
+            "|   S Rajamouli|        ES|        244|         2|\n",
+            "|Neel Prashanth|        ES|        235|         3|\n",
+            "|         S Ram|        ES|        235|         4|\n",
+            "|       R Ramya|        ES|        235|         5|\n",
+            "|    V Nagaraja|        ES|        235|         6|\n",
+            "|     M Deepika|        ES|        223|         7|\n",
+            "|     N  Ashwin|        ES|        134|         8|\n",
+            "|        K Aman|       atm|        256|         1|\n",
+            "|     G Sravani|      biba|        263|         1|\n",
+            "|      N Alekya|      biba|        253|         2|\n",
+            "|     G Susheel|     cloud|        293|         1|\n",
+            "|     A Sravani|     cloud|        275|         2|\n",
+            "|     C Bhavesh|     cloud|        275|         3|\n",
+            "|     G Kalpana|     cloud|        244|         4|\n",
+            "+--------------+----------+-----------+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ex_row_number.withColumn('Rank',rank().over(window)).withColumn(\"Dense Rank\",dense_rank().over(window)).show()"
+      ],
+      "metadata": {
+        "id": "gzEPi-_-Wg73",
+        "outputId": "31b55108-dc43-4e17-db57-d27e3f357d14",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": 162,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "+--------------+----------+-----------+----------+----+----------+\n",
+            "|          name|Competency|Total Marks|Row Number|Rank|Dense Rank|\n",
+            "+--------------+----------+-----------+----------+----+----------+\n",
+            "|       Om Raut|        ES|        269|         1|   1|         1|\n",
+            "|   S Rajamouli|        ES|        244|         2|   2|         2|\n",
+            "|Neel Prashanth|        ES|        235|         3|   3|         3|\n",
+            "|         S Ram|        ES|        235|         4|   3|         3|\n",
+            "|       R Ramya|        ES|        235|         5|   3|         3|\n",
+            "|    V Nagaraja|        ES|        235|         6|   3|         3|\n",
+            "|     M Deepika|        ES|        223|         7|   7|         4|\n",
+            "|     N  Ashwin|        ES|        134|         8|   8|         5|\n",
+            "|        K Aman|       atm|        256|         1|   1|         1|\n",
+            "|     G Sravani|      biba|        263|         1|   1|         1|\n",
+            "|      N Alekya|      biba|        253|         2|   2|         2|\n",
+            "|     G Susheel|     cloud|        293|         1|   1|         1|\n",
+            "|     A Sravani|     cloud|        275|         2|   2|         2|\n",
+            "|     C Bhavesh|     cloud|        275|         3|   2|         2|\n",
+            "|     G Kalpana|     cloud|        244|         4|   4|         3|\n",
+            "+--------------+----------+-----------+----------+----+----------+\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "sGTwKOesZF6d"
+      },
+      "execution_count": 162,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "Welcome To Colaboratory",
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
